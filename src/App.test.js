@@ -61,3 +61,50 @@ test("clicking button increments counter display", () => {
   expect(counterDisplay.text()).toContain(counter + 1);
   expect(wrapper.state("counter")).toBe(8);
 });
+
+test("renders dencriment button", () => {
+  const wrapper = setup();
+  const button = findByTestAttr(wrapper, "decrement-button");
+  expect(button.length).toBe(1);
+});
+
+test("clicking button decrements counter display", () => {
+  const counter = 7;
+  const wrapper = setup(null, { counter });
+  const button = findByTestAttr(wrapper, "decrement-button");
+  button.simulate("click");
+  wrapper.update();
+  const counterDisplay = findByTestAttr(wrapper, "counter-display");
+
+  expect(counterDisplay.text()).toContain(counter - 1);
+  expect(wrapper.state("counter")).toBe(6);
+});
+
+test("clicking button decrements, not downing at 0", () => {
+  const counter = 0;
+  const wrapper = setup(null, { counter });
+  const button = findByTestAttr(wrapper, "decrement-button");
+  button.simulate("click");
+  wrapper.update();
+  expect(wrapper.state("counter")).toBe(0);
+});
+
+test("clicking button decrements counter display Error message", () => {
+  const counter = 0;
+  const wrapper = setup(null, { counter });
+  const button = findByTestAttr(wrapper, "decrement-button");
+  button.simulate("click");
+  wrapper.update();
+  const counterDisplay = findByTestAttr(wrapper, "counter-display");
+  expect(counterDisplay.text()).toContain("the country can't go bellow zero");
+});
+
+test("clicking button increments after error message counter display", () => {
+  const counter = 0;
+  const wrapper = setup(null, { counter });
+  const button = findByTestAttr(wrapper, "increment-button");
+  button.simulate("click");
+  wrapper.update();
+  const counterDisplay = findByTestAttr(wrapper, "counter-display");
+  expect(counterDisplay.text()).toContain(counter + 1);
+});
